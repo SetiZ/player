@@ -1,0 +1,36 @@
+<html>
+<head></head>
+<body>
+	<ul id="theLog"></ul>
+	<script type="text/javascript">
+	function getAllItems() {
+    var timeLog = ""; //the variable that will hold our html
+    var i = 0;
+    var logLength = localStorage.length-1; //how many items are in the database starting with zero
+    
+    //now we are going to loop through each item in the database
+    for (i = 0; i <= logLength; i++) {
+        //lets setup some variables for the key and values
+        var itemKey = localStorage.key(i);
+        var values = localStorage.getItem(itemKey);
+        console.log(values);
+        values = values.split(";"); //create an array of the values
+        var project = values[0];
+        var hours = values[1];
+        var date = values[2];
+        
+        //now that we have the item, lets add it as a list item
+        timeLog += '<li><strong>'+project+'</strong>: '+hours+' hours - '+date+'</li>';
+    }
+    
+    //if there were no items in the database
+    if (timeLog == "")
+    	timeLog = '<li class="empty">Log Currently Empty</li>';
+    
+    //$("#theLog").html(timeLog); //update the ul with the list items
+    document.getElementById("theLog").innerHTML = timeLog;
+}
+getAllItems();
+</script>
+</body>
+</html>
