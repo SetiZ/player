@@ -98,7 +98,6 @@ audio {
 }
 
 #drop_zone {
-  width: 400px;
   height: 200px;
   border: 2px;
   border-color: #000000;
@@ -107,6 +106,8 @@ audio {
 
 #songs table {
   width: 100%;
+  height: 100%;
+  min-height: 400px;
 }
 
 #playlist {

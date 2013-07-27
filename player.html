@@ -6,10 +6,26 @@
   <link rel="stylesheet" type="text/css" href="style.css">
   <script src="id3v2.js"></script>
   <script src="script.js"></script>
+  <script>
+  $(function() {
+    $( "#playlist" ).sortable({
+      update : function(){
+
+        var track_list = [];
+        var lis = document.getElementById("playlist").getElementsByTagName('li')
+        for (var i = 0; i < lis.length; i++) {
+          track_list.push(lis[i].track_id);
+        }
+        changelist(track_list.join(','));
+      },
+      connectWith: ".connectedSortable"
+    }).disableSelection();
+  });
+  </script>
+
 </head>
 <body>
-  <div id="mask"></div>
-  <div id="startup">
+  <!--<div id="startup">
     <div id="prompt">
       <center>
         <input type="file" webkitdirectory directory multiple mozdirectory onchange="getSongs(this.files)">
@@ -25,15 +41,43 @@
         };
         </script>
 
-        <div id="drop_zone">Drop files here</div>
-        <output id="list"></output>
-        <script>
-        function handleFileSelect(evt) {
-          evt.stopPropagation();
-          evt.preventDefault();
+
+      </center>
+      <p style="padding-left: 15px">
+        This is <b>almost certainly</b> the first mp3 player of its kind. Right above you should see a file prompt, go and select your <b>music folder</b>. It will index songs on your hard drive, read ID3 tags, play songs and it works offline. <b>HTML5 is awesome.</b>
+      </p>
+      <p style="padding-left: 15px">
+        By <a href="http://twitter.com/antimatter15">@antimatter15</a> <a href="http://antimatter15.com">http://antimatter15.com</a>
+      </p>
+    </div>
+    <div id="support" style="position:absolute;z-index:99999;color:red;font-size:x-large">
+
+    </div>
+  </div>-->
+  <div id="search">
+    <input type="text" placeholder="filter library" spellcheck=off autocomplete=off oninput="runSearch(this.value)">
+  </div>
+  <div style="height: 37px"></div>
+  <div id="playlist">
+    <table id="playtable"></table>
+  </div>
+  <div id="listtools">
+    <a href="javascript:shuffle()">Shuffle</a> / <a href="javascript:empty()">Clear</a>
+  </div>
+  <div id="songs">
+
+    <table id="songtable" cellspacing=0 cellpadding=0>
+    </table>
+    
+  </div>
+  <div style="height: 50px"></div>
+  <script>
+  function handleFileSelect(evt) {
+    evt.stopPropagation();
+    evt.preventDefault();
 
     var files = evt.dataTransfer.files; // FileList object.
-getSongs(files);
+    getSongs(files);
     // files is a FileList of File objects. List some properties.
     var output = [];
     for (var i = 0, f; f = files[i]; i++) {
@@ -42,53 +86,30 @@ getSongs(files);
         f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a',
         '</li>');
     }
-    document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
-  }
+   // document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
+ }
 
-  function handleDragOver(evt) {
-    evt.stopPropagation();
-    evt.preventDefault();
+ function handleDragOver(evt) {
+  evt.stopPropagation();
+  evt.preventDefault();
     evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
   }
 
   // Setup the dnd listeners.
-  var dropZone = document.getElementById('drop_zone');
+  var dropZone = document.getElementById('songs');
   dropZone.addEventListener('dragover', handleDragOver, false);
   dropZone.addEventListener('drop', handleFileSelect, false);
   </script>
-</center>
-<p style="padding-left: 15px">
-  This is <b>almost certainly</b> the first mp3 player of its kind. Right above you should see a file prompt, go and select your <b>music folder</b>. It will index songs on your hard drive, read ID3 tags, play songs and it works offline. <b>HTML5 is awesome.</b>
-</p>
-<p style="padding-left: 15px">
-  By <a href="http://twitter.com/antimatter15">@antimatter15</a> <a href="http://antimatter15.com">http://antimatter15.com</a>
-</p>
+  <div id="footer">
+    <div id="controlers">
+  <br/>
+  <input type="button" onclick="$('player').play(); return false;" value="play"/>
+  <input type="button" onclick="$('player').pause(); return false;" value="pause"/>
+  <input type="button" onclick="prevSong(); return false;" value="prev"/>
+  <input type="button" onclick="nextSong(); return false;" value="next"/>
+  <br/><br/><br/>
 </div>
-<div id="support" style="position:absolute;z-index:99999;color:red;font-size:x-large"> <!-- insert cheap knockoff modernizer clone -->
-
-</div>
-</div>
-<div id="search">
-  <input type="text" placeholder="filter library" spellcheck=off autocomplete=off oninput="runSearch(this.value)">
-</div>
-<div style="height: 37px"></div>
-<div id="playlist">
-  <table id="playtable"></table>
-</div>
-<div id="listtools">
-  <a href="javascript:shuffle()">Shuffle</a> / 
-  <a href="javascript:empty()">Clear</a>
-</div>
-<div id="songs">
-  <table id="songtable" cellspacing=0 cellpadding=0>
-  </table>
-</div>
-
-
-<div style="height: 50px"></div>
-
-<div id="footer">
-  <audio onended="nextSong()" controls id="player">
-  </div>
-</body>
-</html>
+    <audio onended="nextSong()" controls id="player">
+    </div>
+  </body>
+  </html>
